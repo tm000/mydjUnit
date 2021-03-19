@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="jp.co.dgic.eclipse.jdt.djunit"
+   name="%pluginName"
+   version="0.8.6"
+   provider-name="%providerName"
+   class="jp.co.dgic.eclipse.jdt.internal.junit.ui.DJUnitPlugin">
+
+   <runtime>
+	  <library name="djunit.jar">
+		 <export name="*"/>
+	  </library>
+	  <library name="lib/jcoverage-djunit-1.0.5.jar">
+		 <export name="*"/>
+	  </library>
+	  <library name="lib/jakarta-oro-2.0.7.jar"/>
+   <library name="lib/asm-3.1.jar">
+      <export
+            name="*">
+      </export>
+   </library>
+<!--
+   <library name="lib/bcel-r643711.jar">
+      <export
+            name="*">
+      </export>
+   </library>
+-->
+   </runtime>
+   <requires>
+	  <import plugin="org.eclipse.core.runtime.compatibility"/>
+	  <import plugin="org.eclipse.ui.ide"/>
+	  <import plugin="org.eclipse.ui.views"/>
+	  <import plugin="org.eclipse.jface.text"/>
+	  <import plugin="org.eclipse.ui.workbench.texteditor"/>
+	  <import plugin="org.eclipse.ui.editors"/>
+	  <import plugin="org.eclipse.ui"/>
+	  <import plugin="org.eclipse.core.resources"/>
+	  <import plugin="org.eclipse.core.boot"/>
+	  <import plugin="org.eclipse.debug.core"/>
+	  <import plugin="org.eclipse.debug.ui"/>
+	  <import plugin="org.eclipse.jdt.core"/>
+	  <import plugin="org.eclipse.jdt.ui"/>
+	  <import plugin="org.eclipse.core.runtime"/>
+	  <import plugin="org.eclipse.jdt.launching"/>
+	  <import plugin="org.eclipse.jdt.debug.ui"/>
+	  <import plugin="org.junit"/>
+	  <import plugin="org.eclipse.jdt.junit"/>
+	  <import plugin="org.eclipse.jdt.junit.runtime"/>
+	  <import plugin="org.eclipse.jdt.debug"/>
+   </requires>
+
+   <extension
+		 point="org.eclipse.ui.views">
+	  <category
+			name="djUnit"
+			id="jp.co.dgic.eclipse.jdt.internal.junit.ui.DJUnitPlugin">
+	  </category>
+	  <view
+			name="%Report.label"
+			icon="icons/full/djunit/report.gif"
+			fastViewWidthRatio="0.40"
+			category="jp.co.dgic.eclipse.jdt.internal.junit.ui.DJUnitPlugin"
+			class="jp.co.dgic.eclipse.jdt.internal.coverage.ui.CoverageReportView"
+			id="jp.co.dgic.eclipse.jdt.coverage.CoverageReportView">
+	  </view>
+   </extension>
+   <extension
+		 point="org.eclipse.debug.core.launchConfigurationTypes">
+	  <launchConfigurationType
+			name="%Launch.label"
+			delegate="jp.co.dgic.eclipse.jdt.internal.junit.launcher.DJUnitLaunchConfiguration"
+			modes="run, debug"
+			id="jp.co.dgic.eclipse.jdt.djunit.launchconfig"
+			sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+			sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
+		 <fileExtension
+			   default="false"
+			   extension="java">
+		 </fileExtension>
+		 <fileExtension
+			   default="false"
+			   extension="class">
+		 </fileExtension>
+	  </launchConfigurationType>
+   </extension>
+   <extension
+		 point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+	  <launchConfigurationTypeImage
+			icon="icons/full/djunit/djunitlaunch.gif"
+			configTypeID="jp.co.dgic.eclipse.jdt.djunit.launchconfig"
+			id="jp.co.dgic.eclipse.jdt.djunit.launchimage">
+	  </launchConfigurationTypeImage>
+   </extension>
+   <extension
+		 point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+	  <launchConfigurationTabGroup
+			type="jp.co.dgic.eclipse.jdt.djunit.launchconfig"
+			helpContextId="jp.co.dgic.eclipse.jdt.djunit.junit_tab_group"
+			class="jp.co.dgic.eclipse.jdt.internal.junit.launcher.DJUnitTabGroup"
+			id="jp.co.dgic.eclipse.jdt.djunit.launchConfigurationTabGroup.junit">
+	  </launchConfigurationTabGroup>
+   </extension>
+   <extension
+		 point="org.eclipse.debug.ui.launchShortcuts">
+	  <shortcut
+			label="%JUnitShortcut.label"
+			icon="icons/full/djunit/djunitlaunch.gif"
+			helpContextId="jp.co.dgic.eclipse.jdt.djunit.launch_shortcut"
+			modes="run, debug"
+			class="jp.co.dgic.eclipse.jdt.internal.junit.launcher.DJUnitLaunchShortcut"
+			id="jp.co.dgic.eclipse.jdt.djunit.junitShortcut">
+		 <contextualLaunch>
+			<enablement>
+			   <with
+					 variable="selection">
+				  <count
+						value="1">
+				  </count>
+					   <iterate>
+						 <or>
+							   <test property="org.eclipse.debug.ui.matchesPattern" value="*.java"/>
+							   <test property="org.eclipse.debug.ui.matchesPattern" value="*.class"/>
+							   <instanceof value="org.eclipse.jdt.core.IJavaElement"/>
+						 </or>
+						 <test property="org.eclipse.jdt.junit.isTest"/>
+					   </iterate>
+			   </with>
+			</enablement>
+		 </contextualLaunch>
+		 <perspective
+			   id="org.eclipse.jdt.ui.JavaPerspective">
+		 </perspective>
+		 <perspective
+			   id="org.eclipse.jdt.ui.JavaHierarchyPerspective">
+		 </perspective>
+		 <perspective
+			   id="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+		 </perspective>
+		 <perspective
+			   id="org.eclipse.debug.ui.DebugPerspective">
+		 </perspective>
+	  </shortcut>
+   </extension>
+<!--
+   <extension
+		 point="org.eclipse.ui.ide.markerImageProviders">
+	  <imageprovider
+			markertype="jp.co.dgic.eclipse.jdt.djunit.coverage.marker"
+			icon="icons/full/djunit/nohit.gif"
+			id="jp.co.dgic.eclipse.jdt.djunit.coverage.marker.icon">
+	  </imageprovider>
+   </extension>
+-->
+   <extension
+		 id="coverage.marker"
+		 name="%Coverage.markername"
+		 point="org.eclipse.core.resources.markers">
+	  <super
+			type="org.eclipse.core.resources.taskmarker">
+	  </super>
+	  <persistent
+			value="true">
+	  </persistent>
+   </extension>
+   <extension
+		 point="org.eclipse.ui.editors.markerAnnotationSpecification">
+	  <specification
+			icon="icons/full/djunit/nohit.gif"
+			annotationType="jp.co.dgic.eclipse.jdt.djunit.coverageMarkerAnnotation">
+	  </specification>
+   </extension>
+   <extension
+		 point="org.eclipse.ui.editors.annotationTypes">
+	  <type
+			markerType="jp.co.dgic.eclipse.jdt.djunit.coverage.marker"
+			super="org.eclipse.ui.workbench.texteditor.warning"
+			name="jp.co.dgic.eclipse.jdt.djunit.coverageMarkerAnnotation"
+			markerSeverity="0">
+	  </type>
+   </extension>
+   <extension
+		 point="org.eclipse.ui.propertyPages">
+	  <page
+			objectClass="org.eclipse.core.resources.IProject"
+			adaptable="true"
+			name="djUnit"
+			class="jp.co.dgic.eclipse.jdt.internal.junit.ui.DJUnitProjectPropertyPage"
+			id="jp.co.dgic.eclipse.jdt.internal.junit.ui.JUnitProjectPropertyPage">
+		 <filter
+			   name="nature"
+			   value="org.eclipse.jdt.core.javanature">
+		 </filter>
+	  </page>
+   </extension>
+
+   <extension
+		 point="org.eclipse.jdt.junit.testRunListeners">
+		 <testRunListener class="jp.co.dgic.eclipse.jdt.internal.coverage.ui.CoverageTestRunListener"/>
+   </extension>
+</plugin>
